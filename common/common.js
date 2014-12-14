@@ -20,8 +20,12 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*
+	Common code for all browsers
+*/
+
+// The API code hasn't merged into labs-stable yet, so let's use -test for now...
 var rlServer = "https://tools.wmflabs.org/fengtools/reflinkstest";
-var cgUrl = ""; // Current page's URL, used in Firefox
 
 function cgShowPanel( panel ) {
 	var panels = [ "confirmation", "loading", "error", "result" ];
@@ -34,6 +38,7 @@ function cgShowPanel( panel ) {
 	var id = "#panel-" + panel;
 	$( id ).show();
 }
+
 function cgRun( url ) {
 	cgShowPanel( "loading" );
 	var api = rlServer + "/api.php?action=citegen&format=CiteTemplateGenerator&url=" + encodeURIComponent( url ) + "&callback=?";
@@ -47,46 +52,10 @@ function cgRun( url ) {
 		}
 	} );
 }
-function cgDispatch() {
-	if ( typeof chrome !== 'undefined' ) {
-		// Chrome
-		chrome.tabs.query(
-			{ 'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT },
-			function( tabs ) {
-				cgRun( tabs[0].url );
-			}
-		);
-	} else {
-		// Firefox
-		if ( cgUrl.length ) {
-			cgRun( cgUrl );
-		} else {
-			alert( "The tool hasn't fully loaded yet, please wait..." );
-		}
-	}
-}
-function cgReceiveUrl( url ) {
-	cgUrl = url;
-	cgShowPanel( "confirmation" );
-}
-function cgCopyResultToClipboard() {
-	$( "#result" ).select();
-	if ( typeof chrome !== 'undefined' ) {
-		// Chrome
-		document.execCommand( "copy" );
-	} else {
-		// Firefox
-		addon.port.emit( "cgCopy", $( "#result" ).val() );
-	}
-}
+
 $( document ).ready( function() {
 	cgShowPanel( "confirmation" );
-	$( "#run" ).click( function() {
-		cgDispatch();
-	} );
+	$( "#run" ).click( cgDispatch );
 	$( "#copytoclipboard" ).click( cgCopyResultToClipboard );
-	if ( typeof chrome === 'undefined' ) {
-		// Firefox
-		addon.port.on( "cgUrl", cgReceiveUrl );
-	}
+	cgInit();
 } );

@@ -1,5 +1,4 @@
-<!doctype html>
-<!--
+/*
 	Copyright (c) 2014, Zhaofeng Li
 	All rights reserved.
 	Redistribution and use in source and binary forms, with or without
@@ -19,38 +18,34 @@
 	CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 	OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
-<html>
-<head>
-	<title>CiteGen</title>
-	<link rel="stylesheet" href="style.css"/>
-</head>
-<body>
-	<h1>CiteGen</h1>
-	<div id="panel-confirmation">
-		<p>The URL of the current page will be sent to and accessed by the Reflinks server.</p>
-		<p>Paywalled pages or pages that needs log-in will not work.</p>
-		<p>Are you sure you want to continue?</p>
-		<button id="run">Yes, generate the citation</button>
-		<p>by <a target="_blank" href="https://en.wikipedia.org/wiki/User:Zhaofeng_Li">Zhaofeng Li</a> | Powered by <a target="_blank" href="https://en.wikipedia.org/wiki/User:Zhaofeng_Li/Reflinks">Reflinks</a></p>
-	</div>
-	<div id="panel-loading">
-		<h2>Loading...</h2>
-		<p>We are generating the citation. Hang tight...</p>
-	</div>
-	<div id="panel-error">
-		<h2>Error</h2>
-		<p>We couldn't generate the citation! Please double check that the current page is publicly accessible and try again.</p>
-		<p id="error-description"></p>
-	</div>
-	<div id="panel-result">
-		<h2>Result</h2>
-		<p>Success! Here is the citation:</p>
-		<textarea id="result"></textarea>
-		<button id="copytoclipboard">Copy to clipboard</button>
-	</div>
-	<script src="jquery.js"></script>
-	<script src="browser.js"></script>
-	<script src="common.js"></script>
-</body>
-</html>
+*/
+
+/*
+	Browser-specific code for Firefox
+	
+	You may also want to see common/common.js and chrome/browser.js.
+*/
+
+var cgUrl = "";
+
+function cgDispatch() {
+	if ( cgUrl.length ) {
+		cgRun( cgUrl );
+	} else {
+		alert( "The tool hasn't fully loaded yet, please wait..." );
+	}
+}
+
+function cgReceiveUrl( url ) {
+	cgUrl = url;
+	cgShowPanel( "confirmation" );
+}
+
+function cgCopyResultToClipboard() {
+	$( "#result" ).select(); // mostly for visual cues
+	addon.port.emit( "cgCopy", $( "#result" ).val() ); // see firefox/lib/main.js
+}
+
+function cgInit() {
+	addon.port.on( "cgUrl", cgReceiveUrl );
+}
