@@ -15,6 +15,9 @@ Use the following command to build the extension:
 /path/to/chrome --pack-extension=/path/to/citegen/chrome --pack-extension-key=/path/to/key
 ```
 
+## Project structure
+The `common` directory holds files shared between two versions (The main popup page, core scripts and styling, etc), while `chrome` and `firefox` hold browser-specific code and other resources. Common resources in browser-specific directorues are symbolic links to the actual files in `common`. As such, you may run into problems trying to build the extensions on Windows. See [this StackOverflow question](http://stackoverflow.com/questions/5917249/git-symlinks-in-windows) for an (untested) workaround.
+
 ## Installing on Chrome
 Open `chrome://extensions/` and drag the `.crx` file from the file browser to Chrome.
 
