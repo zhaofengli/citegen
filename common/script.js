@@ -39,10 +39,10 @@ function cgRun( url ) {
 	var api = rlServer + "/api.php?action=citegen&format=CiteTemplateGenerator&url=" + encodeURIComponent( url ) + "&callback=?";
 	$.getJSON( api, function ( result ) {
 		if ( result['success'] ) {
-			$( "#result" ).html( result['citation'] );
+			$( "#result" ).val( result['citation'] );
 			cgShowPanel( "result" );
 		} else {
-			$( "#error-description" ).html( result['description'] );
+			$( "#error-description" ).text( result['description'] );
 			cgShowPanel( "error" );
 		}
 	} );
@@ -69,18 +69,24 @@ function cgReceiveUrl( url ) {
 	cgUrl = url;
 	cgShowPanel( "confirmation" );
 }
+function cgCopyResultToClipboard() {
+	$( "#result" ).select();
+	if ( typeof chrome !== 'undefined' ) {
+		// Chrome
+		document.execCommand( "copy" );
+	} else {
+		// Firefox
+		addon.port.emit( "cgCopy", $( "#result" ).val() );
+	}
+}
 $( document ).ready( function() {
 	cgShowPanel( "confirmation" );
 	$( "#run" ).click( function() {
 		cgDispatch();
 	} );
-	$( "#copytoclipboard" ).click( function() {
-		$( "#result" ).select();
-		document.execCommand( "copy" );
-	} );
+	$( "#copytoclipboard" ).click( cgCopyResultToClipboard );
 	if ( typeof chrome === 'undefined' ) {
 		// Firefox
-		$( "#copytoclipboard" ).html( "Select all" );
 		addon.port.on( "cgUrl", cgReceiveUrl );
 	}
 } );

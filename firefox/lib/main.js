@@ -24,6 +24,7 @@ var { ToggleButton } = require( "sdk/ui/button/toggle" );
 var panels = require( "sdk/panel" );
 var self = require( "sdk/self" );
 var tabs = require( "sdk/tabs" );
+var { Cc, Ci } = require("chrome");
 
 var button = ToggleButton({
 	id: "citegen-button",
@@ -39,6 +40,13 @@ var panel = panels.Panel( {
 	width: 363,
 	height: 500,
 	onHide: handleHide
+} );
+
+panel.port.on( "cgCopy", function( text ) {
+	// Copy the text to clipboard
+	var gClipboardHelper = Cc["@mozilla.org/widget/clipboardhelper;1"]
+	                           .getService( Ci.nsIClipboardHelper );
+	gClipboardHelper.copyString( text );
 } );
 
 function handleChange( state ) {
