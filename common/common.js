@@ -24,7 +24,6 @@
 	Common code for all browsers
 */
 
-// The API code hasn't merged into labs-stable yet, so let's use -test for now...
 var rlServer = "https://tools.wmflabs.org/fengtools/reflinks";
 
 function cgShowPanel( panel ) {
