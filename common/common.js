@@ -25,7 +25,7 @@
 */
 
 // The API code hasn't merged into labs-stable yet, so let's use -test for now...
-var rlServer = "https://tools.wmflabs.org/fengtools/reflinkstest";
+var rlServer = "https://tools.wmflabs.org/fengtools/reflinks";
 
 function cgShowPanel( panel ) {
 	var panels = [ "confirmation", "loading", "error", "result" ];
