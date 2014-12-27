@@ -5,5 +5,5 @@
 	"description": "Generate a Wikipedia citation from the current page, using Reflinks.",
 	"author": "Zhaofeng Li",
 	"license": "BSD 2-Clause",
-	"version": "0.1.3"
+	"version": "0.1.4"
 }
