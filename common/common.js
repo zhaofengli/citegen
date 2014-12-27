@@ -25,6 +25,7 @@
 */
 
 var rlServer = "https://tools.wmflabs.org/fengtools/reflinks";
+var cgDefaultFormat = "CiteTemplateGenerator";
 
 function cgShowPanel( panel ) {
 	var panels = [ "confirmation", "loading", "error", "result" ];
@@ -40,7 +41,11 @@ function cgShowPanel( panel ) {
 
 function cgRun( url ) {
 	cgShowPanel( "loading" );
-	var api = rlServer + "/api.php?action=citegen&format=CiteTemplateGenerator&url=" + encodeURIComponent( url ) + "&callback=?";
+	var format = cgDefaultFormat;
+	if ( $( "#format" ).val().length ) {
+		format = $( "#format" ).val();
+	}
+	var api = rlServer + "/api.php?action=citegen&format=" + encodeURIComponent( format ) + "&url=" + encodeURIComponent( url ) + "&callback=?";
 	$.getJSON( api, function ( result ) {
 		if ( result['success'] ) {
 			$( "#result" ).val( result['citation'] );
@@ -53,8 +58,15 @@ function cgRun( url ) {
 }
 
 $( document ).ready( function() {
+	var format = localStorage.getItem( "format" );
+	if ( format ) {
+		$( "#format" ).val( format );
+	}
 	cgShowPanel( "confirmation" );
 	$( "#run" ).click( cgDispatch );
 	$( "#copytoclipboard" ).click( cgCopyResultToClipboard );
+	$( "#format" ).change( function() {
+		localStorage.setItem( "format", $( "#format" ).val() );
+	} );
 	cgInit();
 } );
