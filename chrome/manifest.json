@@ -3,7 +3,7 @@
 
 	"name": "CiteGen",
 	"description": "Generate a Wikipedia citation from the current page, using Reflinks.",
-	"version": "0.1.4",
+	"version": "0.1.5",
 
 	"permissions": [
 		"tabs",
