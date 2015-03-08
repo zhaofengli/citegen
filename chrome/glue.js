@@ -21,31 +21,29 @@
 */
 
 /*
-	Browser-specific code for Firefox
+	Browser-specific code for Chrome/Chromium
 	
-	You may also want to see common/common.js and chrome/browser.js.
+	You may also want to see common/common.js and firefox/data/glue.js.
 */
-
-var cgUrl = "";
-
-function cgDispatch() {
-	if ( cgUrl.length ) {
-		cgRun( cgUrl );
-	} else {
-		alert( "The tool hasn't fully loaded yet, please wait..." );
-	}
+function cgGlue() {
 }
 
-function cgReceiveUrl( url ) {
-	cgUrl = url;
-	cgShowPanel( "confirmation" );
+cgGlue.version = "chrome";
+
+cgGlue.dispatch = function( citegen ) {
+	chrome.tabs.query(
+		{ 'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT },
+		function( tabs ) {
+			citegen.run( tabs[0].url );
+		}
+	);
 }
 
-function cgCopyResultToClipboard() {
-	$( "#result" ).select(); // mostly for visual cues
-	addon.port.emit( "cgCopy", $( "#result" ).val() ); // see firefox/lib/main.js
+cgGlue.copyToClipboard = function( element ) {
+	$( element ).select();
+	document.execCommand( "copy" );
 }
 
-function cgInit() {
-	addon.port.on( "cgUrl", cgReceiveUrl );
-}
+cgGlue.init = function() {}
+
+

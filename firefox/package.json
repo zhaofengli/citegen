@@ -2,10 +2,10 @@
 	"name": "citegen",
 	"title": "CiteGen",
 	"id": "jid1-HXye6WxA4fLDhQ",
-	"icon": "data/icon.png",
-	"description": "Generate a Wikipedia citation from the current page, using Reflinks.",
+	"icon": "data/common/icon.png",
+	"description": "Generate a Wikipedia citation from the current page, using reFill.",
 	"homepage": "https://en.wikipedia.org/wiki/User:Zhaofeng_Li/CiteGen",
 	"author": "Zhaofeng Li",
 	"license": "BSD 2-Clause",
-	"version": "0.1.5"
+	"version": "1.0.0"
 }

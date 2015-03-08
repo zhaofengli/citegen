@@ -24,49 +24,64 @@
 	Common code for all browsers
 */
 
-var rlServer = "https://tools.wmflabs.org/fengtools/reflinks";
+var rlServer = "https://tools.wmflabs.org/refill";
 var cgDefaultFormat = "CiteTemplateGenerator";
 
-function cgShowPanel( panel ) {
-	var panels = [ "confirmation", "loading", "error", "result" ];
-	for ( var i = 0; i < panels.length; i++ ) {
-		if ( panels[i] != panel ) {
-			var id = "#panel-" + panels[i];
-			$( id ).hide();
+function CiteGen() {
+	this.server = typeof rlServer !== 'undefined' ? rlServer
+	            : "https://tools.wmflabs.org/fengtools/reflinks";
+	this.format = "CiteTemplateGenerator";
+
+	this.showPanel = function( panel ) {
+		var panels = [ "confirmation", "loading", "error", "result" ];
+		for ( var i = 0; i < panels.length; i++ ) {
+			if ( panels[i] != panel ) {
+				var id = "#panel-" + panels[i];
+				$( id ).hide();
+			}
 		}
+		var id = "#panel-" + panel;
+		$( id ).show();
 	}
-	var id = "#panel-" + panel;
-	$( id ).show();
+
+	this.run = function( url ) {
+		this.showPanel( "loading" );
+		var api = this.server + "/api.php?action=citegen&format=" + encodeURIComponent( this.format ) + "&url=" + encodeURIComponent( url ) + "&callback=?";
+		var obj = this;
+		$.getJSON( api, function ( result ) {
+			if ( result['success'] ) {
+				$( "#result" ).val( result['citation'] );
+				obj.showPanel( "result" );
+			} else {
+				$( "#error-description" ).text( result['description'] );
+				obj.showPanel( "error" );
+			}
+		} );
+	}
 }
 
-function cgRun( url ) {
-	cgShowPanel( "loading" );
-	var format = cgDefaultFormat;
-	if ( $( "#format" ).val().length ) {
-		format = $( "#format" ).val();
-	}
-	var api = rlServer + "/api.php?action=citegen&format=" + encodeURIComponent( format ) + "&url=" + encodeURIComponent( url ) + "&callback=?";
-	$.getJSON( api, function ( result ) {
-		if ( result['success'] ) {
-			$( "#result" ).val( result['citation'] );
-			cgShowPanel( "result" );
-		} else {
-			$( "#error-description" ).text( result['description'] );
-			cgShowPanel( "error" );
-		}
-	} );
-}
-
+var cgObject = null;
 $( document ).ready( function() {
+	cgObject = new CiteGen();
+
 	var format = localStorage.getItem( "format" );
 	if ( format ) {
 		$( "#format" ).val( format );
+		cgObject.format = format;
 	}
-	cgShowPanel( "confirmation" );
-	$( "#run" ).click( cgDispatch );
-	$( "#copytoclipboard" ).click( cgCopyResultToClipboard );
 	$( "#format" ).change( function() {
-		localStorage.setItem( "format", $( "#format" ).val() );
+		cgObject.format = $( this ).val();
+		localStorage.setItem( "format", $( this ).val() );
 	} );
-	cgInit();
+
+	cgObject.showPanel( "confirmation" );
+
+	$( "#run" ).click( function() {
+		cgGlue.dispatch( cgObject );
+	} );
+	$( "#copytoclipboard" ).click( function() {
+		cgGlue.copyToClipboard( $( "#result" ) );
+	} );
+
+	cgGlue.init( cgObject );
 } );

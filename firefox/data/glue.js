@@ -21,23 +21,35 @@
 */
 
 /*
-	Browser-specific code for Chrome/Chromium
+	Browser-specific code for Firefox
 	
-	You may also want to see common/common.js and firefox/data/browser.js.
+	You may also want to see common/common.js and chrome/browser.js.
 */
 
-function cgDispatch() {
-	chrome.tabs.query(
-		{ 'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT },
-		function( tabs ) {
-			cgRun( tabs[0].url );
-		}
-	);
+var cgUrl = "";
+
+function cgGlue() {
 }
 
-function cgCopyResultToClipboard() {
-	$( "#result" ).select();
-	document.execCommand( "copy" );
+cgGlue.dispatch = function( obj ) {
+	if ( cgUrl.length ) {
+		obj.run( cgUrl );
+	} else {
+		alert( "The tool hasn't fully loaded yet, please wait..." );
+	}
+
 }
 
-function cgInit() {}
+cgGlue.receiveUrl = function( url ) {
+	cgUrl = url;
+	cgObject.showPanel( "confirmation" );
+}
+
+cgGlue.copyToClipboard = function( element ) {
+	$( element ).select(); // mostly for visual cues
+	addon.port.emit( "cgCopy", $( element ).val() ); // see firefox/lib/main.js
+}
+
+cgGlue.init = function() {
+	addon.port.on( "cgUrl", cgGlue.receiveUrl );
+}

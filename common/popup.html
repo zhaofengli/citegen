@@ -23,41 +23,51 @@
 <html>
 <head>
 	<title>CiteGen</title>
-	<link rel="stylesheet" href="style.css"/>
+	<link rel="stylesheet" href="bootstrap.min.css"/>
 </head>
-<body>
-	<h1>CiteGen</h1>
-	<div id="panel-confirmation">
-		<p>The URL of the current page will be sent to and accessed by the Reflinks server.</p>
-		<p>Paywalled pages or pages that needs log-in will not work.</p>
-		<p>Are you sure you want to continue?</p>
-		<button id="run">Yes, generate the citation</button>
-		<hr/>
-		<label for="format">Result format</label>
-		<select id="format" name="format">
-			<!-- This will be dynamic. -->
-			<option value="CiteTemplateGenerator" selected>Cite template</option>
-			<option value="PlainCs1Generator">Plain CS1 citation</option>
-		</select>
-		<p>by <a target="_blank" href="https://en.wikipedia.org/wiki/User:Zhaofeng_Li">Zhaofeng Li</a> | Powered by <a target="_blank" href="https://en.wikipedia.org/wiki/User:Zhaofeng_Li/Reflinks">Reflinks</a></p>
-	</div>
-	<div id="panel-loading">
-		<h2>Loading...</h2>
-		<p>We are generating the citation. Hang tight...</p>
-	</div>
-	<div id="panel-error">
-		<h2>Error</h2>
-		<p>We couldn't generate the citation! Please double check that the current page is publicly accessible and try again.</p>
-		<p id="error-description"></p>
-	</div>
-	<div id="panel-result">
-		<h2>Result</h2>
-		<p>Success! Here is the citation:</p>
-		<textarea id="result"></textarea>
-		<button id="copytoclipboard">Copy to clipboard</button>
+<body style="min-width:300px">
+	<header>
+		<nav class="navbar navbar-inverse">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="index.php">CiteGen</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<div id="panel-confirmation">
+			<p>A formatted Wikipedia citation will be generated.</p>
+			<p>The URL of the current page will be sent to and accessed by the reFill server. Paywalled pages or pages that needs log-in will not work.</p>
+			<p>Are you sure you want to continue?</p>
+			<button id="run" class="btn btn-primary">Yes, generate the citation</button>
+			<hr/>
+			<label for="format">Result format</label>
+			<select id="format" name="format" class="form-control">
+				<!-- This will be dynamic. -->
+				<option value="CiteTemplateGenerator" selected>Cite template</option>
+				<option value="PlainCs1Generator">Plain CS1 citation</option>
+			</select>
+			<p>by <a target="_blank" href="https://en.wikipedia.org/wiki/User:Zhaofeng_Li">Zhaofeng Li</a> &diams; Powered by <a target="_blank" href="https://en.wikipedia.org/wiki/User:Zhaofeng_Li/reFill">reFill</a></p>
+		</div>
+		<div id="panel-loading">
+			<h2>Loading...</h2>
+			<p>We are generating the citation. Hang tight...</p>
+		</div>
+		<div id="panel-error">
+			<h2>Error</h2>
+			<p>We couldn't generate the citation! Please double check that the current page is publicly accessible and try again.</p>
+			<p id="error-description"></p>
+		</div>
+		<div id="panel-result">
+			<h2>Result</h2>
+			<p>Success! Here is the citation:</p>
+			<textarea id="result" class="form-control"></textarea>
+			<button id="copytoclipboard" class="btn btn-default">Copy to clipboard</button>
+		</div>
 	</div>
 	<script src="jquery.js"></script>
-	<script src="browser.js"></script>
+	<script src="../glue.js"></script>
 	<script src="common.js"></script>
 </body>
 </html>

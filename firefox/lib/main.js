@@ -30,13 +30,13 @@ var button = ToggleButton({
 	id: "citegen-button",
 	label: "Generate citation",
 	icon: {
-		"32": "./icon.png",
+		"32": "./common/icon.png",
 	},
 	onChange: handleChange
 });
 
 var panel = panels.Panel( {
-	contentURL: self.data.url( "popup.html" ),
+	contentURL: self.data.url( "common/popup.html" ),
 	width: 363,
 	height: 500,
 	onHide: handleHide
